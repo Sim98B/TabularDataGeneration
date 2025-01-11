@@ -25,5 +25,3 @@ def describe_data(data: pd.DataFrame, target_col: str):
   report = pd.DataFrame(array, columns = header, index = species).T
     
   return  report
-        
-describe_data(real_iris, 'target')
