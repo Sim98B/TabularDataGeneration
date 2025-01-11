@@ -7,12 +7,13 @@ import seaborn as sns
 
 def describe_data(data: pd.DataFrame, target_col: str):
   
-'''
-Provides descriptive statistics for each class, useful for comparing actual and generated data.
-Args:
-data: pd.DataFrame -> Dataframe containing the class columns too.
-target_col: str -> Name of the class columns.
-'''
+  '''
+  Provides descriptive statistics for each class, useful for comparing actual and generated data.
+  
+  Args:
+    data (pd.DataFrame): Dataframe containing the class columns too.
+    target_col (str): Name of the class columns.
+  '''
 
   Mean = real_iris.groupby('target').mean().round(3)
   Std = real_iris.groupby('target').std().round(3)
