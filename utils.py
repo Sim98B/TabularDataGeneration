@@ -31,6 +31,6 @@ def describe_data(data: pd.DataFrame, target_col: str):
             
   header = pd.MultiIndex.from_tuples(indices_list)
   array = np.hstack((Mean, Std, Min, Max, Skew, Kurt, Iqr))
-  report = pd.DataFrame(array, columns = header, index = species).T
+  report = pd.DataFrame(array, columns = header, index = data[target_col].unique()).T
     
   return  report
