@@ -27,7 +27,7 @@ def describe_data(data: pd.DataFrame, target_col: str):
   indices_list = []
   for stat in stats:
     for i in range(len(data.columns[:-1])):
-      indices_list.append((stat, features[i]))
+      indices_list.append((stat, data.select_dtypes('number').columns[i]))
             
   header = pd.MultiIndex.from_tuples(indices_list)
   array = np.hstack((Mean, Std, Min, Max, Skew, Kurt, Iqr))
