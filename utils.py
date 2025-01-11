@@ -15,10 +15,10 @@ def describe_data(data: pd.DataFrame, target_col: str):
     target_col (str): Name of the class columns.
   '''
 
-  Mean = real_iris.groupby('target').mean().round(3)
-  Std = real_iris.groupby('target').std().round(3)
-  Min = real_iris.groupby('target').min().round(3)
-  Max = real_iris.groupby('target').max().round(3)
+  Mean = data.groupby('target').mean().round(3)
+  Std = data.groupby('target').std().round(3)
+  Min = data.groupby('target').min().round(3)
+  Max = data.groupby('target').max().round(3)
   Skew = np.round([skew(data[data['target'] == label].iloc[:,:-1]) for label in data['target'].unique()],3)
   Kurt = np.round([kurtosis(data[data['target'] == label].iloc[:,:-1]) for label in data['target'].unique()],3)
   Iqr = np.round([[iqr(data[data['target'] == label][col]) for col in data.columns[:-1]]for label in data['target'].unique()], 3)
