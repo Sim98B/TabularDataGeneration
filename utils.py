@@ -5,35 +5,68 @@ from scipy.stats import skew, kurtosis, iqr, entropy
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def describe_data(data: pd.DataFrame, target_col: str):
+def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame):
   
     '''
     Provides descriptive statistics for each class, useful for comparing actual and generated data.
   
     Args:
-      data (pd.DataFrame): Dataframe containing the class columns too.
+      data1 (pd.DataFrame): Dataframe containing the class columns too.
       target_col (str): Name of the class columns.
+      data2 (pd.DataFrame): Optional dataframe of sythetic data. If provided final report will include both datasets descriptives
     '''
+    
+    import numpy as np
+import pandas as pd
+from scipy.stats import skew, kurtosis, iqr
 
-    Mean = data.groupby('target').mean().round(3)
-    Std = data.groupby('target').std().round(3)
-    Min = data.groupby('target').min().round(3)
-    Max = data.groupby('target').max().round(3)
-    Skew = np.round([skew(data[data['target'] == label].iloc[:,:-1]) for label in data['target'].unique()],3)
-    Kurt = np.round([kurtosis(data[data['target'] == label].iloc[:,:-1]) for label in data['target'].unique()],3)
-    Iqr = np.round([[iqr(data[data['target'] == label][col]) for col in data.columns[:-1]]for label in data['target'].unique()],3)
+def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame = None):
+    '''
+    Provides descriptive statistics for each class, useful for comparing actual and generated data.
+  
+    Args:
+      data1 (pd.DataFrame): Dataframe containing the class columns too.
+      target_col (str): Name of the class column.
+      data2 (pd.DataFrame, optional): Optional dataframe of synthetic data. 
+          If provided, the final report will include descriptive statistics for both datasets.
+          
+    Returns:
+      pd.DataFrame: A dataframe with descriptive statistics for the provided datasets.
+    '''
     
-    stats = ['MEAN', 'STD', 'MIN', 'MAX', 'SKEW', 'KURT', 'IQR']
-    indices_list = []
-    for stat in stats:
-        for i in range(len(data.columns[:-1])):
-            indices_list.append((stat, data.select_dtypes('number').columns[i]))
-            
-    header = pd.MultiIndex.from_tuples(indices_list)
-    array = np.hstack((Mean, Std, Min, Max, Skew, Kurt, Iqr))
-    report = pd.DataFrame(array, columns = header, index = data[target_col].unique()).T
+    def generate_stats(data, target_col):
+        """Helper function to compute statistics for a dataset."""
+        mean = data.groupby(target_col).mean().round(3)
+        std = data.groupby(target_col).std().round(3)
+        min_val = data.groupby(target_col).min().round(3)
+        max_val = data.groupby(target_col).max().round(3)
+        skewness = np.round([skew(data[data[target_col] == label].iloc[:, :-1]) for label in data[target_col].unique()], 3)
+        kurt = np.round([kurtosis(data[data[target_col] == label].iloc[:, :-1]) for label in data[target_col].unique()], 3)
+        iqr_values = np.round([[iqr(data[data[target_col] == label][col]) for col in data.columns[:-1]] 
+                               for label in data[target_col].unique()], 3)
+
+        stats = ['MEAN', 'STD', 'MIN', 'MAX', 'SKEW', 'KURT', 'IQR']
+        indices_list = []
+        for stat in stats:
+            for i in range(len(data.columns[:-1])):
+                indices_list.append((stat, data.select_dtypes('number').columns[i]))
+        
+        header = pd.MultiIndex.from_tuples(indices_list)
+        array = np.hstack((mean, std, min_val, max_val, skewness, kurt, iqr_values))
+        return pd.DataFrame(array, columns=header, index=data[target_col].unique()).T
+
+    report1 = generate_stats(data1, target_col)
+    report1.columns = pd.MultiIndex.from_product([["REAL"], report1.columns])
+
+    if data2 is None:
+        return report1
     
-    return  report
+    else:
+        report2 = generate_stats(data2, target_col)
+        report2.columns = pd.MultiIndex.from_product([["SYNTHETIC"], report2.columns])
+
+        final_report = pd.concat([report1, report2], axis=1)
+        return final_report
 
 def plot_data(data1: pd.DataFrame, class_var: str, data2: pd.DataFrame = None):
     
