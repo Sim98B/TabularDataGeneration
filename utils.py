@@ -5,6 +5,8 @@ from scipy.stats import skew, kurtosis, iqr, entropy
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import torch
+
 def compare_results(data1: torch.tensor, data2: torch.tensor):
     
     mean = np.array(data1.mean(0) - data2.mean(0))
