@@ -5,20 +5,16 @@ from scipy.stats import skew, kurtosis, iqr, entropy
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame):
-  
-    '''
-    Provides descriptive statistics for each class, useful for comparing actual and generated data.
-  
-    Args:
-      data1 (pd.DataFrame): Dataframe containing the class columns too.
-      target_col (str): Name of the class columns.
-      data2 (pd.DataFrame): Optional dataframe of sythetic data. If provided final report will include both datasets descriptives
-    '''
+def compare_results(data1: torch.tensor, data2: torch.tensor):
     
-    import numpy as np
-import pandas as pd
-from scipy.stats import skew, kurtosis, iqr
+    mean = np.array(data1.mean(0) - data2.mean(0))
+    std = np.array(data1.std(0) - data2.std(0))
+    minimum = np.array(data1.min(0)[0] - data2.min(0)[0])
+    maximum = np.array(data1.max(0)[0] - data2.max(0)[0])
+    skewness = skew(data1) - skew(data2)
+    kurt = kurtosis(data1) - kurtosis(data2)
+    
+    print(f'MEAN: {mean}\nSTD:  {std}\nMIN:  {minimum}\nMAX:  {maximum}\nSKEW: {skewness}\nKURT: {kurt}')
 
 def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame = None):
     '''
