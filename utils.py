@@ -9,12 +9,12 @@ import torch
 
 def compare_results(data1: torch.tensor, data2: torch.tensor):
     
-    mean = np.array(data1.mean(0) - data2.mean(0))
-    std = np.array(data1.std(0) - data2.std(0))
-    minimum = np.array(data1.min(0)[0] - data2.min(0)[0])
-    maximum = np.array(data1.max(0)[0] - data2.max(0)[0])
-    skewness = skew(data1) - skew(data2)
-    kurt = kurtosis(data1) - kurtosis(data2)
+    mean = np.round(np.array(data1.mean(0) - data2.mean(0)), 3)
+    std = np.round(np.array(data1.std(0) - data2.std(0)), 3)
+    minimum = np.round(np.array(data1.min(0)[0] - data2.min(0)[0]), 3)
+    maximum = np.round(np.array(data1.max(0)[0] - data2.max(0)[0]), 3)
+    skewness = np.round(skew(data1) - skew(data2), 3)
+    kurt = np.round(kurtosis(data1) - kurtosis(data2), 3)
     
     print(f'MEAN: {mean}\nSTD:  {std}\nMIN:  {minimum}\nMAX:  {maximum}\nSKEW: {skewness}\nKURT: {kurt}')
 
