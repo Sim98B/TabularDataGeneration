@@ -25,8 +25,8 @@ def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame = No
     Args:
       data1 (pd.DataFrame): Dataframe containing the class columns too.
       target_col (str): Name of the class column.
-      data2 (pd.DataFrame, optional): Optional dataframe of synthetic data. 
-          If provided, the final report will include descriptive statistics for both datasets.
+      data2 (pd.DataFrame, optional): Optional dataframe of synthetic data. If provided, the final report will include
+      descriptive statistics for both datasets.
           
     Returns:
       pd.DataFrame: A dataframe with descriptive statistics for the provided datasets.
@@ -172,4 +172,40 @@ def plot_data(data1: pd.DataFrame, class_var: str, data2: pd.DataFrame = None):
             ax[idx].set_xlabel('')
             ax[idx].set_ylabel('')
             ax[idx].set_title(target.capitalize(), weight = 'bold')
+        plt.tight_layout();
+        
+def plot_quantiles(data1: pd.DataFrame, data2: pd.DataFrame):
+    
+    '''
+    Show a grid with Q-Q plots of real and fake data to compare distributions.
+    
+    Args:
+        data1 (pd.DataFrame): real dataset
+        data2 (pd.DataFrame): fake dataset
+        
+    Return:
+        Grid with Q-Q plots.
+    '''
+    
+    quantiles = np.linspace(0, 1, len(data1))
+    
+    fig, ax = plt.subplots(1, data1.select_dtypes('number').shape[1], figsize = (16, 4))
+    
+    for idx, col in enumerate(data1.select_dtypes('number').columns):
+        
+        real_data = np.sort(data1[col])
+        fake_data = np.sort(data2[col])
+        
+        real_quantiles = np.percentile(real_data, quantiles * 100)
+        fake_quantiles = np.percentile(fake_data, quantiles * 100)
+        
+        ax[idx].scatter(real_quantiles, fake_quantiles)
+        ax[idx].plot([real_quantiles.min(), real_quantiles.max()], 
+                     [real_quantiles.min(), real_quantiles.max()], 
+                     color='red', linestyle='--', label='Expected Line')
+        ax[idx].set_xlabel('Quantiles of Real Data')
+        ax[idx].set_ylabel('Quantiles of Synthetic Data')
+        ax[idx].set_title('Q-Q Plot')
+        ax[idx].legend()
+        ax[idx].grid(True)
         plt.tight_layout();
