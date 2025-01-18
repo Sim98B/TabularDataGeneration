@@ -1,11 +1,18 @@
 import pandas as pd
 import numpy as np
-from scipy.stats import skew, kurtosis, iqr, entropy
+from scipy.stats import skew, kurtosis, iqr, ks_2samp
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 import torch
+
+def calculate_ks_test(real_data, synthetic_data):
+    results = []
+    for i in range(real_data.shape[1]):
+        ks_stat, p_value = ks_2samp(real_data.iloc[:, i], synthetic_data.iloc[:, i])
+        results.append({'Feature': real_data.columns[i], 'KS Statistic': ks_stat, 'P-Value': p_value})
+    return pd.DataFrame(results)
 
 def compare_results(data1: torch.tensor, data2: torch.tensor):
     
