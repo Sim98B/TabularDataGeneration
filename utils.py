@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from scipy.stats import skew, kurtosis, iqr, ks_2samp
+from scipy.stats import skew, kurtosis, iqr, ks_2samp, wasserstein_distance
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -8,10 +8,21 @@ import seaborn as sns
 import torch
 
 def calculate_ks_test(real_data, synthetic_data):
+    real_data = real_data.select_dtypes('number')
+    synthetic_data = synthetic_data.select_dtypes('number')
     results = []
     for i in range(real_data.shape[1]):
         ks_stat, p_value = ks_2samp(real_data.iloc[:, i], synthetic_data.iloc[:, i])
         results.append({'Feature': real_data.columns[i], 'KS Statistic': ks_stat, 'P-Value': p_value})
+    return pd.DataFrame(results)
+
+def calculate_wasserstein_distance(real_data, synthetic_data):
+    real_data = real_data.select_dtypes('number')
+    synthetic_data = synthetic_data.select_dtypes('number')
+    results = []
+    for i in range(real_data.shape[1]):
+        w_distance = wasserstein_distance(real_data.iloc[:, i], synthetic_data.iloc[:, i])
+        results.append({'Feature': real_data.columns[i], 'W Distance': w_distance})
     return pd.DataFrame(results)
 
 def compare_results(data1: torch.tensor, data2: torch.tensor):
