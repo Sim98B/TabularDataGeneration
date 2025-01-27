@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import skew, kurtosis, iqr, ks_2samp, wasserstein_distance
+import random
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -8,6 +9,17 @@ import seaborn as sns
 import torch
 
 def calculate_ks_test(real_data, synthetic_data):
+    '''
+    Return a pd.DataFrame with Kolmogorov-Smirnov statistic and the associated p-value for all the dataframe features.
+    
+    Args:
+        real_data (pd.DataFrame): Dataframe containing real data
+        synthetic_data (pd.DataFrame): Dataframe containing fake data
+        
+    Returns:
+        pd.DataFrame with the result of the KS test.
+    '''
+    
     real_data = real_data.select_dtypes('number')
     synthetic_data = synthetic_data.select_dtypes('number')
     results = []
@@ -17,6 +29,16 @@ def calculate_ks_test(real_data, synthetic_data):
     return pd.DataFrame(results)
 
 def calculate_wasserstein_distance(real_data, synthetic_data):
+    '''
+    Return a pd.DataFrame with the Wasserstein Distance for all the dataframe features.
+    
+    Args:
+        real_data (pd.DataFrame): Dataframe containing real data
+        synthetic_data (pd.DataFrame): Dataframe containing fake data
+        
+    Returns:
+        pd.DataFrame with all the distances.
+    '''
     real_data = real_data.select_dtypes('number')
     synthetic_data = synthetic_data.select_dtypes('number')
     results = []
@@ -26,6 +48,16 @@ def calculate_wasserstein_distance(real_data, synthetic_data):
     return pd.DataFrame(results)
 
 def compare_results(data1: torch.tensor, data2: torch.tensor):
+    '''
+    Utility function to monitor differences in descriptive statistics between real and fake data while training a model.
+    
+    Args:
+        data1 (torch.tensor): Tensor of real data
+        data2 (torch.tensor): Tensor of fake data
+        
+    Returns:
+        Tensor with differences between descriptive statistics each feature
+    '''
     
     mean = np.round(np.array(data1.mean(0) - data2.mean(0)), 3)
     std = np.round(np.array(data1.std(0) - data2.std(0)), 3)
@@ -44,14 +76,17 @@ def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame = No
       data1 (pd.DataFrame): Dataframe containing the class columns too.
       target_col (str): Name of the class column.
       data2 (pd.DataFrame, optional): Optional dataframe of synthetic data. If provided, the final report will include
-      descriptive statistics for both datasets.
+      descriptive statistics for both datasets. Default is None.
           
     Returns:
       pd.DataFrame: A dataframe with descriptive statistics for the provided datasets.
     '''
     
     def generate_stats(data, target_col):
-        """Helper function to compute statistics for a dataset."""
+        """
+        Helper function to compute statistics for datasets
+        """
+        
         mean = data.groupby(target_col).mean().round(3)
         std = data.groupby(target_col).std().round(3)
         min_val = data.groupby(target_col).min().round(3)
@@ -92,9 +127,9 @@ def plot_data(data1: pd.DataFrame, class_var: str, data2: pd.DataFrame = None):
     if two are provided it shows the differences between and characteristics of the two datasets.
     
     Args:
-    data1: real data dataset
-    target: pd.Series used to plot characteristics within classes
-    data2: fake or generated data dataset
+        data1 (pd.DataFrame): real data dataset. 
+        target (str): pd.Series used to plot characteristics within classes. 
+        data2(pd.DataFrame): fake or generated data dataset. Default is None.
     '''
     
     if data2 is None:
@@ -195,7 +230,7 @@ def plot_data(data1: pd.DataFrame, class_var: str, data2: pd.DataFrame = None):
 def plot_quantiles(data1: pd.DataFrame, data2: pd.DataFrame):
     
     '''
-    Show a grid with Q-Q plots of real and fake data to compare distributions.
+    Shows a grid with Q-Q plots of real and fake data to compare distributions.
     
     Args:
         data1 (pd.DataFrame): real dataset
@@ -227,3 +262,16 @@ def plot_quantiles(data1: pd.DataFrame, data2: pd.DataFrame):
         ax[idx].legend()
         ax[idx].grid(True)
         plt.tight_layout();
+        
+def set_seed(seed: int = 0):
+    '''
+    Sets a seed for all random operations to ensure reproducible results.
+    
+    Args:
+        seed (int): The seed value to be used for random number generation. Default is 0.
+    '''
+    
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
