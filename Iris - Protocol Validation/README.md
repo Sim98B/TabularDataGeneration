@@ -2,7 +2,7 @@
 
 This project explores synthetic data generation for the Iris dataset using **Conditional Generative Adversarial Networks (cGANs)** and **Variational Autoencoders (VAEs)**. The goal is to generate high-quality synthetic tabular data that preserves the statistical properties and class-specific relationships of the original dataset. This work is part of a broader initiative to generate synthetic medical data (tabular and imaging).
 
-![Generated vs Real Data Comparison](images/comparison.png)
+![Generated vs Real Data Comparison](images/Q-Qplots.png)
 *Example of synthetic vs real data distributions.*
 
 ---
