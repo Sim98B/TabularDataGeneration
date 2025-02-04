@@ -82,7 +82,7 @@ Two architectures were compared:
 | 32      | 1.757k       | 4.989k      |        15.549k   |
 | 64      | 2.781k       | 7.037k      |     19.645k      |
 
-**Number of parameters o each explored model**
+**Number of parameters of each explored model**
 
 |  Mean Absolute Correlations Differences      |Medium GAN with 16 Noise Vector | Big GAN with 16 Noise Vector |
 |-----------|-----------|-----------|
@@ -126,3 +126,5 @@ These features led to the achievement of excellent overall and class-specific pe
 - Evaluation  using test sets.
 - Cross evaluation from the two models.
 
+![Confusion Matrices](images/ConfusionMatrices.png)
+*Confusion Matrices*
