@@ -31,3 +31,33 @@ The project uses the following Python libraries:
 - **SciPy** for statistical tests (Kolmogorov-Smirnov, Wasserstein distance).
 
 ```python
+import pandas as pd
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+import torch
+```
+
+---
+
+## Data Preparation
+The Iris dataset is loaded and preprocessed:
+- **Normalization**: Features scaled to [0, 1].
+- **Class Conditioning**: Labels encoded and provided as input to generators.
+
+---
+
+## Exploring Architectures
+### GAN vs VAE
+Two architectures were compared:
+1. **Variational Autoencoder (VAE)**: Learned latent representations but struggled with class-specific feature relationships.
+2. **Generative Adversarial Network (GAN)**: Outperformed VAE in capturing feature characteristics as shown by images.
+
+| AVG Metric       | GAN    | VAE    |
+|--------------|--------|--------|
+| Wasserstein ↓| 0.32274   | 0.25224   |
+| KS Test p-value ↑ | 0.00053 | 2.5e-6 |
+
+
+---
