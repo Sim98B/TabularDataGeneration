@@ -1,6 +1,6 @@
 # Iris Tabular Data Generation using PyTorch
 
-This project explores synthetic data generation for the Iris dataset using **Conditional Generative Adversarial Networks (cGANs)** and **Variational Autoencoders (VAEs)**. The goal is to generate high-quality synthetic tabular data that preserves the statistical properties and class-specific relationships of the original dataset. This work is part of a broader initiative to generate synthetic medical data (tabular and imaging).
+This project explores synthetic data generation for the Iris dataset using different architectures for data generation including **Variational Auto Encoder (VAE)**, **Generative Adversarial Network (GAN)** and **Wasserstein GAN WGAN**. The goal is to generate high-quality synthetic tabular data that preserves the statistical properties and class-specific relationships of the original dataset. This work is part of a larger initiative to generate synthetic medical data (tabular and imaging) and is a validation of a protocol to be followed in data generation tasks.
 
 ![Generated vs Real Data Comparison](images/Q-Qplots.png)
 *Example of synthetic vs real data distributions.*
