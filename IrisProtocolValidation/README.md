@@ -128,3 +128,63 @@ These features led to the achievement of excellent overall and class-specific pe
 
 ![Confusion Matrices](images/ConfusionMatrices.png)
 *Confusion Matrices*
+
+---
+
+## Installation
+
+To use this script, follow the steps below:
+
+1. **Clona la repository**  
+   Open the terminal and clone the GitHub repository with the command:
+
+   ```bash
+   git clone https://github.com/Sim98B/TabularDataGeneration.git
+   cd TabularDataGeneration/IrisProtocolValidation/Model
+   ```
+2. **Install requirements**
+   
+    ```bash
+    pip install -r requirements.txt
+    ```
+---
+
+## Usage
+
+To generate a synthetic dataset based on the Iris dataset, use the following command:
+
+```bash
+python GenerateIrisData.py --weights WGAN_weights.pth --scaler scaler.pkl
+```
+
+### Required Arguments:
+- `--weights`: Path to the generator weights file (`.pth`).
+- `--scaler`: Path to the saved scaler file (`.pkl`).
+
+### Options:
+- `--setosa`: Number of samples to generate for the *setosa* class (default: `50`).
+- `--versicolor`: Number of samples to generate for the *versicolor* class (default: `50`).
+- `--virginica`: Number of samples to generate for the *virginica* class (default: `50`).
+- `--seed`: Set a seed for reproducibility.
+- `--output`: Name of the output CSV file (default: `SyntheticIris.csv`).
+
+---
+
+## Results
+- Pre-trained model to generate data is saved in the `Model/` directory.
+- Full notebook analysis is stored the `WGAN.ipynb`.
+- All functions used in the implementation of the project are in the `utils.py` file.
+
+---
+
+## Conclusion
+
+The **Wasserstein cGAN** combined with engineered features (sepal_area and petal_area) achieved the best performance in generating synthetic Iris data. The evaluation—both statistical (KS test, Wasserstein distance) and practical (cross-evaluation using classifiers)—confirms that the synthetic data closely mimics the real data distribution. This approach can be extended to more complex datasets, including those in the medical domain, with appropriate privacy safeguards.
+
+---
+
+## References
+
+- [PyTorch Documentation](https://pytorch.org)
+- [Iris Dataset: UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/53/iris)
+- Arjovsky, M., et al. (2017). “Wasserstein GAN.” ICML.
