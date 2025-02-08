@@ -2,6 +2,8 @@
 
 This repository contains multiple sub-projects aimed at generating synthetic data for different domains, including tabular datasets and medical imaging.
 
+![Project](FullProtocol.png)
+
 ## Project Structure
 
 - **[Iris Protocol Validation](IrisProtocolValidation)**  
