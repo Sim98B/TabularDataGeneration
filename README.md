@@ -9,8 +9,8 @@ This repository contains multiple sub-projects aimed at generating synthetic dat
 - **[Iris Protocol Validation](IrisProtocolValidation)**  
   Validation of a generative model for tabular data using the Iris dataset.
   
-- **[Breast Cancer Data Generation](BreastCancerDataGeneration/README.md)**  
+- **[Breast Cancer Data Generation](BreastCancer/README.md)**  
   Synthetic data generation for breast cancer classification models.
   
-- **[Brain Tumor Image Generation](BrainTumorGeneration/README.md)**  
+- **[Brain Tumor Image Generation](BrainTumor/README.md)**  
   A generative model for producing synthetic MRI scans classified into healthy and three tumor types.
