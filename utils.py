@@ -67,6 +67,28 @@ def compare_results(data1: torch.tensor, data2: torch.tensor):
     kurt = np.round(kurtosis(data1) - kurtosis(data2), 3)
     
     print(f'MEAN: {mean}\nSTD:  {std}\nMIN:  {minimum}\nMAX:  {maximum}\nSKEW: {skewness}\nKURT: {kurt}')
+    
+def critic_loss(critic: torch.nn.Module, real_data: torch.Tensor, fake_data: torch.Tensor, labels: torch.Tensor, lambda_gp: float = 10):
+    """
+    Calculates the critical loss for a WGAN-GP, including the gradient penalty.
+
+    Args:
+        critic (torch.nn.Module): The critic (discriminator) that evaluates real and generated data.
+        real_data (torch.Tensor): Batch of real data with shape (batch_size, feature_dim).
+        fake_data (torch.Tensor): Batch of generated data with shape (batch_size, feature_dim).
+        labels (torch.Tensor): Conditional labels associated with data, if applicable.
+        lambda_gp (float, optional): Coefficient that adjusts the weight of the gradient penalty. Default: 10.
+
+    Returns:
+        torch.Tensor: Scaled value of the critic's loss.
+    """
+    real_score = critic(real_data, labels)
+    fake_score = critic(fake_data, labels)
+    
+    wasserstein_loss = fake_score.mean() - real_score.mean()
+    
+    gp = gradient_penalty(critic, real_data, fake_data, labels, lambda_gp)
+    return wasserstein_loss + gp
 
 def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame = None):
     '''
@@ -118,6 +140,57 @@ def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame = No
 
         final_report = pd.concat([report1, report2], axis=1)
         return final_report
+    
+def generator_loss(critic: torch.nn.Module, fake_data: torch.Tensor, labels: torch.Tensor):
+    """
+    Calculates the loss of the generator in a WGAN-GP.
+
+    Args:
+        critic (torch.nn.Module): The critic (discriminator) that evaluates real and generated data.
+        fake_data (torch.Tensor): Batch of generated data with shape (batch_size, feature_dim).
+        labels (torch.Tensor): Conditional labels associated with data, if applicable.
+
+    Returns:
+        torch.Tensor: Scaled value of the generator loss.
+    """
+    fake_score = critic(fake_data, labels)
+    return -fake_score.mean()
+    
+def gradient_penalty(critic: torch.nn.Module, real_data: torch.Tensor, fake_data: torch.Tensor, labels: torch.Tensor, lambda_gp: float = 10):
+    """
+    Calculates the gradient penalty term for stabilizing WGAN-GP training.
+
+    Args:
+        critic (torch.nn.Module): The critic (discriminator) that evaluates real and generated data.
+        real_data (torch.Tensor): Batch of real data with shape (batch_size, feature_dim).
+        fake_data (torch.Tensor): Batch of generated data with shape (batch_size, feature_dim).
+        labels (torch.Tensor): Conditional labels associated with data, if applicable.
+        lambda_gp (float, optional): Coefficient that adjusts the weight of the gradient penalty. Default: 10.
+
+    Returns:
+        torch.Tensor: Scaled value of the gradient penalty to be added to the critical's loss.
+    """
+    batch_size = real_data.size(0)
+    epsilon = torch.rand(batch_size, 1)
+    epsilon = epsilon.expand_as(real_data)
+    interpolated = epsilon * real_data + (1 - epsilon) * fake_data
+    interpolated.requires_grad_(True)
+    
+    interpolated_score = critic(interpolated, labels)
+    
+    grad_outputs = torch.ones_like(interpolated_score)
+    gradients = torch.autograd.grad(
+        outputs=interpolated_score,
+        inputs=interpolated,
+        grad_outputs = grad_outputs,
+        create_graph = True,
+        retain_graph = True,
+        only_inputs = True
+    )[0]
+    
+    gradients_norm = gradients.view(batch_size, -1).norm(2, dim=1)
+    penalty = lambda_gp * ((gradients_norm - 1) ** 2).mean()
+    return penalty
 
 def plot_data(data1: pd.DataFrame, class_var: str, data2: pd.DataFrame = None):
     
@@ -156,12 +229,12 @@ def plot_data(data1: pd.DataFrame, class_var: str, data2: pd.DataFrame = None):
         plt.tight_layout();
         
         plt.figure(figsize = (8, 8))
-        sns.heatmap(data = data1.select_dtypes('number').corr(), cmap = 'seismic', vmin = -1, vmax = 1, annot = True, fmt = '.3f', cbar_kws = {'location':'top'})
+        sns.heatmap(data = data1.select_dtypes('number').corr(), cmap = 'seismic', vmin = -1, vmax = 1, annot = True, fmt = '.3f', cbar_kws = {'location':'top'}, annot_kws = {'weight': 'bold'})
         plt.tight_layout();
         
         fig, ax = plt.subplots(1, data1[class_var].nunique(), figsize = (12, 4))
         for idx, target in enumerate(data1[class_var].unique()):
-            sns.heatmap(data = data1[data1[class_var] == target].select_dtypes('number').corr(), cmap = 'seismic', vmin = -1, vmax = 1, annot = True, fmt = '.3f', cbar = False, ax = ax[idx])
+            sns.heatmap(data = data1[data1[class_var] == target].select_dtypes('number').corr(), cmap = 'seismic', vmin = -1, vmax = 1, annot = True, fmt = '.3f', cbar = False, ax = ax[idx], annot_kws = {'weight': 'bold'})
             ax[idx].set_xticks([])
             ax[idx].set_yticks([])
             ax[idx].set_xlabel('')
@@ -210,7 +283,7 @@ def plot_data(data1: pd.DataFrame, class_var: str, data2: pd.DataFrame = None):
         data1corr = combined_data[combined_data['label'] == 'Real'].select_dtypes('number').corr()
         data2corr = combined_data[combined_data['label'] == 'Fake'].select_dtypes('number').corr()
         plt.figure(figsize = (8, 8))
-        sns.heatmap(data = (data1corr - data2corr), cmap = 'seismic', vmin = -1, vmax = 1, annot = True, fmt = '.3f', cbar_kws = {'location':'top'})
+        sns.heatmap(data = (data1corr - data2corr), cmap = 'seismic', vmin = -1, vmax = 1, annot = True, fmt = '.3f', cbar_kws = {'location':'top'}, annot_kws = {'weight': 'bold'})
         plt.tight_layout();
         
         fig, ax = plt.subplots(1, combined_data[class_var].nunique(), figsize = (12, 4))
@@ -219,7 +292,7 @@ def plot_data(data1: pd.DataFrame, class_var: str, data2: pd.DataFrame = None):
             real_corr_data = combined_data[(combined_data['target'] == target) & (combined_data['label'] == 'Real')].select_dtypes('number').corr()
             fake_corr_data = combined_data[(combined_data['target'] == target) & (combined_data['label'] == 'Fake')].select_dtypes('number').corr()
             
-            sns.heatmap(data = (real_corr_data - fake_corr_data), cmap = 'seismic', vmin = -1, vmax = 1, annot = True, fmt = '.3f', cbar = False, ax = ax[idx])
+            sns.heatmap(data = (real_corr_data - fake_corr_data), cmap = 'seismic', vmin = -1, vmax = 1, annot = True, fmt = '.3f', cbar = False, annot_kws = {'weight': 'bold'}, ax = ax[idx])
             ax[idx].set_xticks([])
             ax[idx].set_yticks([])
             ax[idx].set_xlabel('')
