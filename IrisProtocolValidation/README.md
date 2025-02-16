@@ -135,7 +135,7 @@ These features led to the achievement of excellent overall and class-specific pe
 
 To use this script, follow the steps below:
 
-1. **Clona la repository**  
+1. **Clone the repository**  
    Open the terminal and clone the GitHub repository with the command:
 
    ```bash
