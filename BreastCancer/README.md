@@ -14,7 +14,12 @@ The goal of this project is to train a **Wasserstein Generative Adversarial Netw
 2. [Data Preparation](#data-preparation)
 3. [Data Modeling](#Data-modeling)
 4. [Explicit Evaluation](#Explicit-Evaluation)
-5. (Latent Evaluation)(#Latent-Evaluation)
+5. [Latent Evaluation](#Latent-Evaluation)
+6. [Installation](#installation)
+7. [Usage](#usage)
+8. [Results](#results)
+9. [Conclusion](#conclusion)
+10. [References](#references)
 
 
 ---
