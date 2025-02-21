@@ -14,6 +14,7 @@ The goal of this project is to train a **Wasserstein Generative Adversarial Netw
 2. [Data Preparation](#data-preparation)
 3. [Data Modeling](#Data-modeling)
 4. [Explicit Evaluation](#Explicit-Evaluation)
+5. (Latent Evaluation)(#Latent-Evaluation)
 
 
 ---
@@ -123,3 +124,50 @@ To asses the quality of the data, the **Train on Real Test on Synthetic (TOR-TS)
 *TOR-TS confusion matrix (on the left), TOS-TR confusion matrix (on the right)*
 
 **While the performance is adequate, the real-world impact of the False Negative rate should never be underestimated: errors of this kind can potentially lead to underestimation. The data, even if of excellent quality, and the conclusions reached by any model must always be backed up by a human decision.**
+
+---
+
+## Latent Evaluation
+
+Since the dataste is very complex, an analysis of not only explicit but also latent similarity was necessary, carried out through **Principal Component Analysis**, a dimensional reduction technique that linearly combines real variables into latent components.
+
+### Explained Variance
+The variance explained by the real and synthetic components appears to be virtually the same, especially for the former components, which in both datasets explain almost all of the variance.
+
+| Real EV | Fake EV |
+|---------|---------|
+| 0.982045| 0.988461|
+| 0.016176| 0.010266|
+| 0.001558| 0.001033|
+| 0.000121| 0.000139|
+| 0.000088| 0.000085|
+
+### Cosine Distance
+The cosine distance between each pair of components was calculated to check their alignment in space: the first components are more closely aligned suggesting greater similarity.
+| Component | Cosine Distance |
+|-----------|---------|
+| 1         | 0.0000  |
+| 2         | 0.0014  |
+| 3         | 0.0030  |
+| 4         | 1.9169  |
+| 5         | 1.9158  |
+
+### Wasserstein Distance
+Once again, the prince tool confirmed to us the similarity between real and synthetic data.
+| Component | Wasserstein Distance |
+|-----------|---------|
+| 1         | 0.049311  |
+| 2         | 0.131439  |
+| 3         | 0.082486  |
+| 4         | 0.174529  |
+| 5         | 0.135763  |
+
+### Screeplot
+Through the screeplot we see how the real and synthetic components are almost completely overlapping.
+![Screeplot](images/screeplot.png)
+*Components' Screeplot*
+
+### Bivariate KDE plot
+The bivariate KDE plot also shows good overlap for the first components, indicating good data quality at the latent level.
+![Bivaraite KDE](images/bivariate_kde.png)
+*Bivaraite KDE*
