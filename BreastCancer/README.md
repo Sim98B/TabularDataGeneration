@@ -81,3 +81,19 @@ The **Kolomonorv-Smirnov test** was used to evaluate the null hypothesis that th
 | **area error** | 2.506679   |
 | **mean area** | 16.915316   |
 | **worst area** | 29.057681   |
+
+These features relate to characteristics that can be technically derived through the geometric formulas of the circumference and area of the circle. Through empirical tests, an attempt was made to have the model generate the `Δ` between the actual and theoretical values obtained by approximating each cell to a circle: the results were not promising so a more classical approach was preferred. Nevertheless, through a graphical analysis the critical features seem to adequately trace the distributions of the actuals.
+
+![Boxplots](images/critic_features_boxplots.png)
+*Critic features boxplots*
+
+Although only **84%** of the dataset was adequately recreated the global and class-specific linear relationships were adequately reproduced:
+
+| Correlation       | Mean Absolute Difference    |
+|-------------------|-----------------------------|
+| **Full Overall**  | 0.0423    |
+| **Full Benign**  | 0.0587    |
+| **Full Malignant**  | 0.0482    |
+| **Critic Overall**  | 0.0156    |
+| **Critic Benign**  | 0.0183    |
+| **Critic Malignant**  | 0.0646    |
