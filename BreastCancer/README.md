@@ -13,6 +13,7 @@ The goal of this project is to train a **Wasserstein Generative Adversarial Netw
 1. [Libraries](#libraries)
 2. [Data Preparation](#data-preparation)
 3. [Data Modeling](#Data-modeling)
+4. [Explicit Evaluation](#Explicit-Evaluation)
 
 
 ---
@@ -97,3 +98,28 @@ Although only **84%** of the dataset was adequately recreated the global and cla
 | **Critic Overall**  | 0.0156    |
 | **Critic Benign**  | 0.0183    |
 | **Critic Malignant**  | 0.0646    |
+
+---
+
+## Explicit Evaluation
+
+Through a simulation of an operational context, i.e., the generation of 1000 datasets, the model was evaluated in its ability to adequately reflect reality in the absence of seeds for reproducibility: 
+- for all datasets the null hypothesis of the **KS test** was not rejected for any feature
+- the number of features with **Wasserstein distance** greater than 1 remained consistent across generations with a slight downward trend
+
+| Number of feature | Number of Datasets|
+|-------------------|-------------------|
+| 4                 | 25                |
+| 5                 | 974                |
+| 6                 | 1                |
+
+
+To asses the quality of the data, the **Train on Real Test on Synthetic (TOR-TS)**  and **Train on Synthetic Test on Real (TOS-TR)** protocol was used:
+- a real and synthetic dataset were divided into **train (80%), validation (10%) and test (10%) sets.**
+- two binary, `12.354k` parameters classifiers via 128-case batches were trained on the two respective datasets showing acceptable performance, defined by both **accuracy**, **precision**, **recall** and **F1** and a **False Negative rate** as low as possible on the test set.
+- finally, both models were tested on the entire dataset not used for their training showing, once again, acceptable performance
+
+![Classifier Comparison](images/final_confusion_matrix.png)
+*TOR-TS confusion matrix (on the left), TOS-TR confusion matrix (on the right)*
+
+**While the performance is adequate, the real-world impact of the False Negative rate should never be underestimated: errors of this kind can potentially lead to underestimation. The data, even if of excellent quality, and the conclusions reached by any model must always be backed up by a human decision.**
