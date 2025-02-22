@@ -208,3 +208,20 @@ python GenerateBreastCancerData.py --weights BCWGAN_weights.pth --scaler min_max
 ### Required Arguments:
 - `--weights`: Path to the generator weights file (`.pth`).
 - `--scaler`: Path to the saved scaler file (`.pkl`).
+
+### Options:
+- `--benign`: Number of samples to generate for the *benign* class (default: `357`).
+- `--malignant`: Number of samples to generate for the *malignant* class (default: `212`).
+- `--seed`: Set a seed for reproducibility.
+- `--output`: Name of the output CSV file (default: `SyntheticBreastCancer.csv`).
+
+---
+
+## Results
+- Pre-trained model to generate data is saved in the `Model/` directory.
+- Full notebook analysis is stored the `WGANBreastCancer.ipynb`.
+- All functions used in the implementation of the project are in the `utils.py` file.
+
+---
+
+## Conclusion
