@@ -196,3 +196,15 @@ To use this script, follow the steps below:
     pip install -r requirements.txt
     ```
 ---
+
+## Usage
+
+To generate a synthetic dataset based on the Breast Cancer dataset, use the following command:
+
+```bash
+python GenerateIrisData.py --weights WGAN_weights.pth --scaler scaler.pkl
+```
+
+### Required Arguments:
+- `--weights`: Path to the generator weights file (`.pth`).
+- `--scaler`: Path to the saved scaler file (`.pkl`).
