@@ -13,25 +13,26 @@ import torch.nn as nn
 import joblib
 from sklearn.preprocessing import MinMaxScaler
 
-class WGenerator(nn.Module):
-    def __init__(self, noise_dim, class_dim, output_dim):
-        super(WGenerator, self).__init__()
-        
-        self.model = nn.Sequential(
-            nn.Linear(noise_dim + class_dim, 128),
-            nn.BatchNorm1d(128),
-            nn.LeakyReLU(0.2),
-            nn.Linear(128, 64),
-            nn.BatchNorm1d(64),
-            nn.LeakyReLU(0.2),
-            nn.Linear(64, output_dim), 
-            nn.Tanh()
-        )
-    
-    def forward(self, noise, labels):
-        labels = labels.unsqueeze(1)
-        x = torch.cat([noise, labels], dim = 1)
-        return self.model(x)
+def create_generator(path_to_weights: str):
+    class WGenerator(nn.Module):
+        def __init__(self, noise_dim, class_dim, output_dim):
+            super(WGenerator, self).__init__()
+
+            self.model = nn.Sequential(
+                nn.Linear(noise_dim + class_dim, 128),
+                nn.BatchNorm1d(128),
+                nn.LeakyReLU(0.2),
+                nn.Linear(128, 64),
+                nn.BatchNorm1d(64),
+                nn.LeakyReLU(0.2),
+                nn.Linear(64, output_dim), 
+                nn.Tanh()
+            )
+
+        def forward(self, noise, labels):
+            labels = labels.unsqueeze(1)
+            x = torch.cat([noise, labels], dim = 1)
+            return self.model(x)
         
     generator = WGenerator(noise_dim = 100, class_dim = 1, output_dim = 30)
     generator.load_state_dict(torch.load(path_to_weights))

@@ -30,7 +30,7 @@ def create_generator(path_to_weights: str):
             x = torch.cat([noise, labels], dim=1)
             return self.model(x)
         
-    generator = WGenerator(noise_dim=16, hidden_dim=32, class_dim=1, output_dim=6)
+    generator = WGenerator(noise_dim = 16, hidden_dim = 32, class_dim = 1, output_dim = 6)
     generator.load_state_dict(torch.load(path_to_weights))
     generator.eval()
     return generator
