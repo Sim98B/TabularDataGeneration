@@ -12,7 +12,7 @@ The goal of this project is to train a **Wasserstein Generative Adversarial Netw
 ## Table of Contents
 1. [Libraries](#libraries)
 2. [Data Preparation](#data-preparation)
-3. [Data Modeling](#Data-modeling)
+3. [Data Modeling](#Data-Modeling)
 4. [Explicit Evaluation](#Explicit-Evaluation)
 5. [Latent Evaluation](#Latent-Evaluation)
 6. [Installation](#installation)
@@ -176,3 +176,23 @@ Through the screeplot we see how the real and synthetic components are almost co
 The bivariate KDE plot also shows good overlap for the first components, indicating good data quality at the latent level.
 ![Bivaraite KDE](images/bivariate_kde.png)
 *Bivaraite KDE*
+
+---
+
+## Installation
+
+To use this script, follow the steps below:
+
+1. **Clone the repository**  
+   Open the terminal and clone the GitHub repository with the command:
+
+   ```bash
+   git clone https://github.com/Sim98B/TabularDataGeneration.git
+   cd TabularDataGeneration/BrestCancer/Model
+   ```
+2. **Install requirements**
+   
+    ```bash
+    pip install -r requirements.txt
+    ```
+---
