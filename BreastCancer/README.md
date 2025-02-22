@@ -202,7 +202,7 @@ To use this script, follow the steps below:
 To generate a synthetic dataset based on the Breast Cancer dataset, use the following command:
 
 ```bash
-python GenerateIrisData.py --weights WGAN_weights.pth --scaler scaler.pkl
+python GenerateBreastCancerData.py --weights BCWGAN_weights.pth --scaler min_max_scaler.pkl
 ```
 
 ### Required Arguments:
