@@ -225,3 +225,15 @@ python GenerateBreastCancerData.py --weights BCWGAN_weights.pth --scaler min_max
 ---
 
 ## Conclusion
+
+The **Wasserstein cGAN** successfully generated synthetic breast cancer data, preserving the statistical properties of the original dataset. The evaluation through statistical measures (such as the inverse transformation of generated data using MinMax scaling) and practical validation (by ensuring class separation between benign and malignant cases) suggests that the synthetic samples closely resemble real-world distributions. This approach demonstrates its potential for augmenting medical datasets, particularly in scenarios where data privacy and scarcity are critical concerns. With further refinement, including adversarial validation and classifier-based assessments, this method could enhance data availability for machine learning applications in oncology and other medical domains.
+
+---
+
+## References
+
+- [PyTorch Documentation](https://pytorch.org)
+- [Breast Cancer Dataset: UCI Machine Learning Repository]([https://archive.ics.uci.edu/dataset/53/iris](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic))
+- Arjovsky, M., et al. (2017). “Wasserstein GAN.” ICML.
+
+**THIS PROJECT IS SOLELY INTENDED TO DEMONSTRATE HOW DEEP LEARNING AND GENERATIVE AI MODELS CAN POTENTIALLY CONTRIBUTE TO THE MEDICAL FIELD. THE GENERATED DATA ARE NOT MEANT TO SUBSTITUTE REAL DATA BUT RATHER TO SERVE AS AN ADDITIONAL SUPPORT. ANY DECISION BASED ON THESE DATA SHOULD NOT REPLACE CAREFUL HUMAN ANALYSIS.**
