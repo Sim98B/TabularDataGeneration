@@ -69,7 +69,7 @@ def generate_breast_cancer_data(model: torch.nn.Module, scaler, benign: int = 35
     breast_cancer_dataframe['target'] = label_array
     breast_cancer_dataframe['target'] = breast_cancer_dataframe['target'].map(mapping_dict)
     
-    return iris_dataframe
+    return breast_cancer_dataframe
 
 def main():
     parser = argparse.ArgumentParser(description="Generate synthetic Iris dataset")
