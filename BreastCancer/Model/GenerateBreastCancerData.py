@@ -72,7 +72,7 @@ def generate_breast_cancer_data(model: torch.nn.Module, scaler, benign: int = 35
     return breast_cancer_dataframe
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate synthetic Iris dataset")
+    parser = argparse.ArgumentParser(description = "Generate synthetic Breast Cancer dataset")
     parser.add_argument("--weights", type = str, required = True, help = "Path to generator weights (.pth file)")
     parser.add_argument("--scaler", type = str, required = True, help = "Path to saved scaler (.pkl file)")
     parser.add_argument("--benign", type = int, default = 357, help = "Number of benign samples")
