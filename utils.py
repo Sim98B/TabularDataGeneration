@@ -143,12 +143,36 @@ def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame = No
         return final_report
 
 def generate_images(generator, noise, tumor_labels, section_labels, num_images):
+    """
+    Generate and display images using the trained generator, ensuring evaluation happens on CPU.
+
+    Args:
+        generator (torch.nn.Module): The trained generator model.
+        noise (torch.Tensor): The latent noise vector for generation.
+        tumor_labels (torch.Tensor): Labels for tumor classification.
+        section_labels (torch.Tensor): Labels for section classification.
+        num_images (int): Number of images to generate.
+    """
+    device = next(generator.parameters()).device  # Otteniamo il device originale del generatore
+    
+    # Spostiamo tutto su CPU
+    generator = generator.to("cpu")
+    noise = noise.to("cpu")
+    tumor_labels = tumor_labels.to("cpu")
+    section_labels = section_labels.to("cpu")
+    
     with torch.no_grad():
         generated_images = generator(noise, tumor_labels, section_labels)
-        plt.figure(figsize = (7, 7))
-        grid = vutils.make_grid(generated_images, padding = 2, normalize = True).permute(1,2,0)
-        plt.imshow(grid)
-        plt.axis('off')
+    
+    # Riportiamo il generatore sul device originale
+    generator = generator.to(device)
+
+    # Visualizzazione
+    plt.figure(figsize=(7, 7))
+    grid = vutils.make_grid(generated_images, padding=2, normalize=True).permute(1, 2, 0)
+    plt.imshow(grid)
+    plt.axis('off')
+    plt.show()
     
 def generator_loss(critic: torch.nn.Module, fake_data: torch.Tensor, labels: torch.Tensor):
     """
