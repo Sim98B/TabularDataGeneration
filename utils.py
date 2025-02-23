@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 import torch
+import torchvision.utils as vutils
 
 def calculate_ks_test(real_data, synthetic_data):
     '''
@@ -140,6 +141,14 @@ def describe_data(data1: pd.DataFrame, target_col: str, data2: pd.DataFrame = No
 
         final_report = pd.concat([report1, report2], axis=1)
         return final_report
+
+def generate_images(generator, noise, tumor_labels, section_labels, num_images):
+    with torch.no_grad():
+        generated_images = generator(noise, tumor_labels, section_labels)
+        plt.figure(figsize = (7, 7))
+        grid = vutils.make_grid(generated_images, padding = 2, normalize = True).permute(1,2,0)
+        plt.imshow(grid)
+        plt.axis('off')
     
 def generator_loss(critic: torch.nn.Module, fake_data: torch.Tensor, labels: torch.Tensor):
     """
